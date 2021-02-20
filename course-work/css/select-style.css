@@ -1,0 +1,66 @@
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: url('../images/arrow-top.svg');
+  top: 7px;
+  right: 19px;
+  width: 0;
+  height: 0;
+}
+
+.select-selected {
+  position: absolute;
+  left: 0;
+  width: 91px;
+  height: 21px;
+  padding-left: 11.97px;
+  font-size: 12px;
+   /* background-position: 92% center; */
+  background-color: #e7e5eb;
+  border: 1px solid #c8c5d1;
+  appearance: none;
+  line-height: 20px;
+}
+
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  content: url(../images/arrow-top-up.svg);
+  top: 7px;
+}
+
+.select-items div,
+.select-selected {
+  width: 101px;
+  font-size: 12px;
+  color: #333;
+  padding: 7px 10px;
+  border: 1px solid #c8c5d1;
+  cursor: pointer;
+}
+
+.select-items div:not(:last-child) {
+  border-color: transparent #c8c5d1 transparent #c8c5d1;
+}
+
+.select-items div:last-child {
+  border-top: transparent;
+}
+
+
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: #f4f3f6;
+  top: 100%;
+  left: 0;
+  z-index: 99;
+}
+
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
