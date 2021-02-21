@@ -10,13 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const legend = document.querySelector('.modal__legend');
   const spanId = document.querySelector('.modal__span');
   const btnUnderlined = document.querySelector('.modal__btn--underlined');
-  // let wrap = document.querySelector('.modal__wrap');
-  // let block = document.querySelector('.modal__block-complex');
+  const labels = document.querySelectorAll('th');
+  let response, data, i, inputContact, selectedDataset, rowOfTable;
   let surname = document.getElementById('surname');
   let name = document.getElementById('name');
   let lastName = document.getElementById('lastName');
-  let response, data, i, inputContact, selectedDataset, rowOfTable;
-  let labels = document.querySelectorAll('th');
   let fields = [
     'id',
     'surname',
@@ -67,40 +65,61 @@ document.addEventListener('DOMContentLoaded', function() {
     data = await response.json();
     let dataSorted = data.sort(inAscendingOrder(field));
   };
+  function changeActiveCell(target) {
+    let selectedCell = document.querySelector('.selected');
+    if (target.querySelector('span:first-child').innerHTML !== selectedCell.innerHTML) {
+      selectedCell.nextElementSibling.classList.add('hide');
+      selectedCell.classList.add('hide');
+      document.querySelector('.alphabet').classList.add('hide');
+      selectedCell.removeAttribute('class');
+      target.querySelector('span:first-child').setAttribute('class', 'selected');
+      target.querySelector('span:nth-child(2)').classList.remove('hide');
+      if (target.querySelector('.alphabet')) {
+        target.querySelector('.alphabet').classList.remove('hide');
+      }
+    };
+  }
 
   async function handle() {
     response = await fetch('http://localhost:3000/api/clients');
     data = await response.json();
     let dataSorted;
-    labels[0].addEventListener('click', function() {
+    let target;
+    labels[0].addEventListener('click', (e) => {
+      target = e.currentTarget;
+      changeActiveCell(target);
       deleteRows();
-      if (document.querySelector('th:first-child span').classList.contains('arrow-up')) {
+      if (document.querySelector('th:first-child span:nth-child(2)').classList.contains('arrow-up')) {
         dataSorted = data.sort(inDescendingOrder(fields[0]));
-        document.querySelector('th:first-child span').classList.remove('arrow-up');
+        document.querySelector('th:first-child span:nth-child(2)').classList.remove('arrow-up');
       } else {
         dataSorted = data.sort(inAscendingOrder(fields[0]));
-        document.querySelector('th:first-child span').classList.add('arrow-up');
+        document.querySelector('th:first-child span:nth-child(2)').classList.add('arrow-up');
       };
       formTable(dataSorted);
     });
 
-    labels[1].addEventListener('click', function() {
+    labels[1].addEventListener('click', (e) => {
+      target = e.currentTarget;
+      changeActiveCell(target);
       deleteRows();
-      if (!document.querySelector('th:nth-child(2) span').classList.contains('arrow-up')) {
+      if (!document.querySelector('th:nth-child(2) span:nth-child(2)').classList.contains('arrow-up')) {
         dataSorted = data.sort(inDescendingOrder(fields[1]));
-        document.querySelector('th:nth-child(2) span:first-child').classList.add('arrow-up');
+        document.querySelector('th:nth-child(2) span:nth-child(2)').classList.add('arrow-up');
         document.querySelector('.alphabet').textContent = 'Я-А';
       } else {
         dataSorted = data.sort(inAscendingOrder(fields[1]));
-        document.querySelector('th:nth-child(2) span').classList.remove('arrow-up');
+        document.querySelector('th:nth-child(2) span:nth-child(2)').classList.remove('arrow-up');
         document.querySelector('.alphabet').textContent = 'А-Я';
       };
       formTable(dataSorted);
     });
 
-    labels[2].addEventListener('click', () => {
+    labels[2].addEventListener('click', (e) => {
+      target = e.currentTarget;
+      changeActiveCell(target);
       deleteRows();
-      if (document.querySelector('th:nth-child(3) span').classList.contains('arrow-up')) {
+      if (document.querySelector('th:nth-child(3) span:last-child').classList.contains('arrow-up')) {
         data.sort((a, b) => {
           if ((new Date(a.createdAt).getMonth()) > (new Date(b.createdAt).getMonth())) {
             return 1;
@@ -119,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return 0;
           });
-          document.querySelector('th:nth-child(3) span').classList.remove('arrow-up');
+          document.querySelector('th:nth-child(3) span:last-child').classList.remove('arrow-up');
         } else {
             data.sort((a, b) => {
               if ((new Date(a.createdAt).getMonth()) < (new Date(b.createdAt).getMonth())) {
@@ -139,14 +158,16 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               return 0;
             });
-            document.querySelector('th:nth-child(3) span').classList.add('arrow-up');
+            document.querySelector('th:nth-child(3) span:last-child').classList.add('arrow-up');
           };
       formTable(dataSorted);
     });
 
-    labels[3].addEventListener('click', () => {
+    labels[3].addEventListener('click', (e) => {
+      target = e.currentTarget;
+      changeActiveCell(target);
       deleteRows();
-      if (document.querySelector('th:nth-child(4) span').classList.contains('arrow-up')) {
+      if (document.querySelector('th:nth-child(4) span:last-child').classList.contains('arrow-up')) {
         data.sort((a, b) => {
           if ((new Date(a.updatedAt).getMonth()) > (new Date(b.updatedAt).getMonth())) {
             return 1;
@@ -165,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           return 0;
         });
-        document.querySelector('th:nth-child(4) span').classList.remove('arrow-up');
+        document.querySelector('th:nth-child(4) span:last-child').classList.remove('arrow-up');
         } else {
           data.sort((a, b) => {
             if ((new Date(a.updatedAt).getMonth()) < (new Date(b.updatedAt).getMonth())) {
@@ -185,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return 0;
           });
-          document.querySelector('th:nth-child(4) span').classList.add('arrow-up');
+          document.querySelector('th:nth-child(4) span:last-child').classList.add('arrow-up');
           };
       formTable(dataSorted);
     })
@@ -466,44 +487,29 @@ document.addEventListener('DOMContentLoaded', function() {
   searchInput.addEventListener('input', async function() {
     response = await fetch('http://localhost:3000/api/clients');
     data = await response.json();
-    
-
     clearTimeout(timerId);
     let text = searchInput.value;
     timerId = setTimeout(function() {
       data.forEach(async (arr) => {
-        if (text === arr.id) {
-          response = await fetch(`http://localhost:3000/api/clients/${arr.id}`);
-          data = await response.json();
-          console.log(data);
-          deleteRows();
-          formTable(data);
-        }
-        if (text === arr.surname) {
-          response = await fetch(`http://localhost:3000/api/clients/${arr.id}`);
-          data = await response.json();
-          console.log(data);
-          deleteRows();
-          formTable(data);
-        }
-        if (text === arr.name) {
-          response = await fetch(`http://localhost:3000/api/clients/${arr.id}`);
-          data = await response.json();
-          console.log(data);
-          deleteRows();
-          formTable(data);
-        }
-        if (text === arr.lastName) {
-          response = await fetch(`http://localhost:3000/api/clients/${arr.id}`);
-          data = await response.json();
-          let array = [];
-          array.push(data);
-          console.log(array);
-          deleteRows();
-          formTable(array);
-        }
-      })
-    
+        function newData (id, surname, name, lastName) {
+          this.id = id;
+          this.surname = surname;
+          this.name = name;
+          this.lastName = lastName;
+        };
+        let dataFormated = new newData (arr.id, arr.surname, arr.name, arr.lastName);
+        let values = Object.values(dataFormated);
+        for (let value of values) {
+          if (text === value) {
+            response = await fetch(`http://localhost:3000/api/clients/${dataFormated.id}`);
+            data = await response.json();
+            let array = [];
+            array.push(data);
+            deleteRows();
+            formTable(array);
+          };
+        };
+      });
     }, 300);
   });
 });

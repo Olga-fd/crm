@@ -164,20 +164,6 @@ h1 {
   display: none;
 }
 
-/* .plus {
-  display: inline-block;
-  width: 23px;
-  height: 16px;
-  margin-right: 10px;
-  background-position: center;
-  vertical-align: middle; 
-  background: url(../images/man-plus.svg) no-repeat; */
-  /* background-repeat: no-repeat;
-  -webkit-mask-image: url(../images/man-plus.svg); 
-  mask-image: url(../images/man-plus.svg);
-  background-color: #9873FF;*/
-/* }  */
-
 .main__btn,
 .main__btn svg path,
 /* .main__btn:hover,
@@ -268,6 +254,7 @@ td:nth-child(5) {
   padding-right: 0px;
 }
 
+.selected,
 th:first-child:hover,
 th:nth-child(2):hover,
 th:nth-child(3):hover,
@@ -598,7 +585,9 @@ time {
 .modal-new.hide,
 .modal_overlay.hide,
 .modal__wrap.hide,
-.modal-del.hide {
+.modal-del.hide,
+.arrow-down.hide,
+.alphabet.hide {
   display: none;
 }
 
