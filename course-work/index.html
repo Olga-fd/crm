@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/balloon.min.css">
-  <link rel="stylesheet" href="css/select-style.css">
-  <link rel="stylesheet" href="css/styles.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRM</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <!-- <link rel="stylesheet" href="css/balloon.min.css"> -->
+  <link rel="stylesheet" href="css/tooltip.css">
+  <link rel="stylesheet" href="css/select-style.css">
+  <link rel="stylesheet" href="css/styles.css">
   <script defer src="js/style-script.js"></script>
   <script defer src="js/script.js"></script> 
   
@@ -15,7 +16,7 @@
 </head>
 <body>
   <header class="header">
-    <div class="fixed-container">
+    <div class="fixed-container header__fixed-container">
       <img class="header__logo" src="images/logo.svg" alt="Логотип">
       <input type="text" class="header__input" placeholder="Введите запрос">
     </div>
@@ -52,7 +53,7 @@
       <div class="main__block--white">
         <img class="main__preloader" src="images/download.svg" alt="Идет загрузка">
       </div>   
-            
+      
       <button class="main__btn" aria-label="Добавить">
         <!-- <span class="user-plus"></span> -->
         <svg width="23" height="16" viewBox="0 0 23 16" fill="none" 

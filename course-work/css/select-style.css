@@ -64,3 +64,11 @@
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+@media (min-width: 320px) and (max-width: 767px) {
+  
+  .select-selected,
+  .select-items div {
+    width: 88px;
+  }
+}

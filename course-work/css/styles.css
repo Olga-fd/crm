@@ -79,8 +79,8 @@ select:focus {
 }
 
 .header {
+  width: 100%;
   height: 90px;
-  min-height: 40px;
   background: #fff;
 }
 
@@ -259,13 +259,13 @@ th:first-child:hover,
 th:nth-child(2):hover,
 th:nth-child(3):hover,
 th:nth-child(4):hover {
-  color: #333;
+  color: var(--lilac-color);
 }
-
 
 th {
   height: 27px;
   font-size: 12px;
+  font-weight: 400;
   color: var(--grey-color);
   text-align: left;
 }
@@ -345,6 +345,7 @@ time {
 .fb, .vk,
 .phone, .another,
 .mail {
+  position: relative;
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -432,7 +433,7 @@ time {
 }
 
 .modal__legend {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -469,14 +470,14 @@ time {
   left: -5px;
   top: 12px;
   color: var(--grey-color);
-  font-weight: 600;
+  font-weight: 400;
   transition: 200ms all;
   transform: translateX(20px);
 }
 
 .modal__label sup {
   color:var(--lilac-color);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .modal__input:focus + .modal__label,
@@ -654,5 +655,41 @@ p {
   width: 61%;
   margin: 0 auto;
   padding-bottom: 25px;
+}
+
+@media (min-width: 320px) and (max-width: 767px) {
+  
+  .header {
+    height: 40px;
+  }
+
+  .header__fixed-container {
+    justify-content: center;
+  }
+
+  .header__logo {
+    width: 24px;
+    margin-right: 0;
+  }
+
+  .header__input {
+    display: none;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .modal__form-new {
+    width: 300px;
+  }
+
+  .input--border {
+    width: 141px;
+  }
+
+  .input--border::placeholder {
+    content: 'Введите данные';
+  }
 }
 

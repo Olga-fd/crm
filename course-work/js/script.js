@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     data = await response.json();
     let dataSorted = data.sort(inAscendingOrder(field));
   };
+
   function changeActiveCell(target) {
     let selectedCell = document.querySelector('.selected');
     if (target.querySelector('span:first-child').innerHTML !== selectedCell.innerHTML) {
@@ -217,12 +218,11 @@ document.addEventListener('DOMContentLoaded', function() {
     inputContact = document.querySelectorAll('.input--border');
     selectedDataset = document.querySelectorAll('.select-selected');
     let arr = [];
-    
     for (i = 0; i < inputContact.length; i++) {
       let obj = {};
       obj.type = selectedDataset[i].dataset.name;
+      console.log(obj.type);
       obj.value = inputContact[i].value;
-      console.log(obj);
       arr.push(obj);
     };
     return arr;
@@ -233,9 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        name: `${name.value}`,
-        surname: `${surname.value}`,
-        lastName: `${lastName.value}`,
+        name: `${name.value.trim()}`,
+        surname: `${surname.value.trim()}`,
+        lastName: `${lastName.value.trim()}`,
         contacts: addContacts(),
       }),
     });
@@ -247,14 +247,14 @@ document.addEventListener('DOMContentLoaded', function() {
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
-      name: `${name.value}`,
-      surname: `${surname.value}`,
-      lastName: `${lastName.value}`,
+      name: `${name.value.trim()}`,
+      surname: `${surname.value.trim()}`,
+      lastName: `${lastName.value.trim()}`,
       contacts: addContacts(),
-    }),
-  });
-  data = await response.json();
-}; 
+      }),
+    });
+    data = await response.json();
+  }; 
 
   async function showListOfClients() {
     response = await fetch('http://localhost:3000/api/clients');
@@ -303,7 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     let className;
     let cell = e.target.parentNode.previousSibling;
-    let spanContacts = cell.querySelectorAll('span');
+    let linkContacts = cell.querySelectorAll('a');
+    console.log(linkContacts);
     let fullNameInputs = document.querySelectorAll('.modal input');
     let props = [
       data[index].surname,
@@ -314,14 +315,16 @@ document.addEventListener('DOMContentLoaded', function() {
     for (i = 0; i < fullNameInputs.length; i++) {
       fullNameInputs[i].value = props[i];
     };
-    
-    for (i = 0; i < spanContacts.length; i++) {
+  
+    for (i = 0; i < linkContacts.length; i++) {
       transformSelect(e);
       createBtnCancel();
-      document.querySelectorAll('.input--border')[i].value = spanContacts[i].getAttribute('aria-label');
-      className = spanContacts[i].className;
+      document.querySelectorAll('.input--border')[i].value = linkContacts[i].getAttribute('data-tooltip');
+      className = linkContacts[i].className;
       let necessary = options.find(option => className === option.value);
+      console.log(className);
       selectedItem.innerHTML = necessary.label;
+      selectedItem.dataset.name = necessary.value;
     }; 
 
     const cancels = document.querySelectorAll('.cancel');
@@ -399,10 +402,25 @@ document.addEventListener('DOMContentLoaded', function() {
       for (let j = 0; j < object.contacts.length; j++) {
         for (let f = 0; f < style.length; f++) {
           if (object.contacts[j].type === style[f]) {
-            let contact = document.createElement('span');  
+            let contact = document.createElement('a');  
             contact.classList.add(style[f]);
-            contact.setAttribute('data-balloon-pos', 'up');
-            contact.setAttribute('aria-label', `${object.contacts[j].value}`);
+            
+            if (object.contacts[j].type === 'phone') {
+              contact.setAttribute('href', `tel: ${object.contacts[j].value}`);
+            };
+            if (object.contacts[j].type === 'vk') {
+              contact.setAttribute('href', `https://vk.com/${object.contacts[j].value}`);
+              contact.setAttribute('target', '_blank');
+            };
+            if (object.contacts[j].type === 'mail') {
+              contact.setAttribute('href', `mailto: ${object.contacts[j].value}`);
+            };
+            if (object.contacts[j].type === 'fb') {
+              contact.setAttribute('href', `https://facebook.com/${object.contacts[j].value}`);
+              contact.setAttribute('target', '_blank');
+            };            
+            // contact.setAttribute('aria-label', `${object.contacts[j].value}`);
+            contact.setAttribute('data-tooltip', `${object.contacts[j].value}`);
             contacts.append(contact);
           };
         };
@@ -418,11 +436,24 @@ document.addEventListener('DOMContentLoaded', function() {
     blockOfUpdate.append(timeOfUpdate);
     tr.append(blockOfCreation);
     tr.append(blockOfUpdate);
-    
     tr.append(contacts);
     btns.append(btnChange);
     btns.append(btnDelete);
     tr.append(btns);
+
+    (function() {
+      let mi = document.querySelectorAll('[data-tooltip]');
+      for (let l = 0; l < mi.length; l++) {
+        let width = getComputedStyle(document.querySelectorAll('[data-tooltip]')[l],':before').width;
+        console.log(width);
+        let need = (parseInt(width) + 17) / 2 - 7;
+        console.log(need);
+        let computedStyle = document.querySelectorAll('[data-tooltip]')[l].dataset.tooltip;
+        
+        console.log(computedStyle);
+        computedStyle.style.width = `${need} + px`;
+      }
+    })();
     
     return {
       tr,
@@ -430,6 +461,8 @@ document.addEventListener('DOMContentLoaded', function() {
       btnDelete,
     };
   };
+
+  
 
   async function deleteCustomerRecord(el) {
     response = await fetch(`http://localhost:3000/api/clients/${el.target.dataset.id}`, {
