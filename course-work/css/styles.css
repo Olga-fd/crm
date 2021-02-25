@@ -141,7 +141,7 @@ h1 {
   background: #fff;
 }
 
- .main__preloader {
+.main__preloader {
   position: absolute;
   top: 43%;
   left: calc(50% - 23px);
@@ -149,18 +149,28 @@ h1 {
   animation: spin 2s linear infinite;
 } 
 
+.btn-preloader {
+  /* position: absolute; */
+  top: 20%;
+  left: 0;
+  z-index: 600;
+  /* animation: spin 2s linear infinite; */
+}
+
 @keyframes spin {
   0% {transform: rotate(0deg);}
   100% {transform: rotate(360deg);}
 } 
 
-.loaded_hiding .main__block--white {
+.loaded_hiding .main__block--white,
+.loaded_hiding .btn-preloader {
   transition: 0.3s opacity;
   opacity: 0;
 }
 
 .loaded .main__block--white,
-.loaded .main__preloader {
+.loaded .main__preloader,
+.loaded .btn-preloader {
   display: none;
 }
 
@@ -332,6 +342,9 @@ time {
 }
 
 .modal__span {
+  position: absolute;
+  top: 26px;
+  left: 47%;
   padding-top: 6px;
   font-size: 12px;
   color: var(--grey-color);
@@ -383,12 +396,18 @@ time {
 }
 
 .change {
+  position: relative;
   padding-right: 32px;
+}
+
+.delete {
+  position: relative;
 }
 
 .change:hover {
   color: var(--lilac-color);
 }
+
 
 .delete:hover {
   color: var(--red-color);
@@ -417,7 +436,6 @@ time {
   /* height: 396px; */
   min-height: 215px;
   background-color: #fff;
-  border: 2px solid #000;
   height: 90%;
 }
 
@@ -433,8 +451,10 @@ time {
 }
 
 .modal__legend {
+  padding: 26px 0 21px 16px;
   font-size: 18px;
   font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .modal-del .modal__legend {
@@ -480,8 +500,8 @@ time {
   font-weight: 400;
 }
 
-.modal__input:focus + .modal__label,
-.modal__input:valid + .modal__label {
+.modal__input:focus + .modal__label
+/* .modal__input:valid + .modal__label*/ { 
   font-size: 10px;
   font-weight: 400;
   top: -4px;
@@ -530,15 +550,26 @@ time {
 }
 
 .modal__btn--lilac {
+  position: relative;
   margin-bottom: 5px;
-  padding: 14.5px 36.3px;
+  padding: 13px 38px;
   font-weight: 600;
   color: #fff;
   background-color: #9873FF;
   border: none;
 }
 
+.modal__btn--lilac .btn-preloader {
+  display: inline-block;
+}
+
+.lil { 
+  display: inline-block;
+  
+}
+
 .modal__btn-block {
+  /* position: relative; */
   align-items: center;
 }
 
@@ -564,6 +595,7 @@ time {
 }
 
 .cancel {
+  position: relative;
   width: 27px;
   height: 35px;
   padding: 0;
@@ -577,6 +609,33 @@ time {
   z-index: 602;
 }
 
+.cancel:hover {
+  border-color:  rgba(240, 106, 77, .5);
+  background: url('../images/cancel-red.svg') no-repeat;
+  background-color: #e7e5eb;
+  background-position: center center;
+}
+
+.cancel:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.cancel .tooltip {
+  z-index: 603;
+  bottom: 33px;
+  left: -51.5px;
+  width: 133px;
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cancel .tooltip::after {
+  top: 99%;
+}
+
 .modal__select {
   position: absolute;
   left: -150px;
@@ -587,8 +646,10 @@ time {
 .modal_overlay.hide,
 .modal__wrap.hide,
 .modal-del.hide,
+/* .modal__input.hide */
 .arrow-down.hide,
-.alphabet.hide {
+.alphabet.hide,
+.btn-preloader.hide {
   display: none;
 }
 
@@ -596,7 +657,7 @@ time {
 .input--border {
   position: absolute;
   display: inline-block;
-  width: 255px;
+  width: 268px;
   height: 33px;
   padding-left: 15px;
   border: 1px solid #c8c5d1;
@@ -651,13 +712,35 @@ p {
   padding-bottom: 11px;
 }
 
-p {
+legend p {
   width: 61%;
   margin: 0 auto;
   padding-bottom: 25px;
 }
 
-@media (min-width: 320px) and (max-width: 767px) {
+.error {
+  border-bottom-color: rgba(240, 106, 77, .5);
+}
+
+.input-error {
+  border-color: rgba(240, 106, 77, .5);
+}
+
+.modal__errors {
+  width: 255px;
+  margin: 0 auto;
+}
+
+.error-text {
+  margin: 0;
+  color: #f06a4d;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 14px;
+  text-align: center;
+}
+
+@media (min-width: 320px) and (max-width: 594px) {
   
   .header {
     height: 40px;

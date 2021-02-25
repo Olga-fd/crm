@@ -55,8 +55,7 @@
       </div>   
       
       <button class="main__btn" aria-label="Добавить">
-        <!-- <span class="user-plus"></span> -->
-        <svg width="23" height="16" viewBox="0 0 23 16" fill="none" 
+        <svg width="23" height="16" viewbox="0 0 23 16" fill="none" 
           xmlns="http://www.w3.org/2000/svg">
           <path d="M14.5 8C16.71 8 18.5 6.21 18.5 4C18.5 1.79 16.71 0 14.5 0C12.29 0 
           10.5 1.79 10.5 4C10.5 6.21 12.29 8 14.5 
@@ -73,30 +72,37 @@
     <form class="modal__form-new">
       <button type="reset" class="close" aria-label="Закрыть"></button>
       <fieldset class="modal__fieldset">
-        <div class="modal__legend--block">
+        
         <legend class="modal__legend legend--new"></legend>
         <span class="modal__span"></span>
-      </div>
+     
         <div class="modal__block">
-          <input class="modal__input input-surname" type="text" id="surname" required>
+          <input class="modal__input hide input-surname" type="text" id="surname">
           <label class="modal__label" for="surname">Фамилия<sup>*</sup></label> 
         </div>
         <div class="modal__block">
-          <input class="modal__input input-name" type="text" id="name" required> 
+          <input class="modal__input hide input-name" type="text" id="name"> 
           <label class="modal__label" for="name">Имя<sup>*</sup></label>
         </div>  
         <div class="modal__block">
-          <input class="modal__input input-middlename" type="text" id="lastName" required>
+          <input class="modal__input hide input-middlename" type="text" id="lastName">
           <label class="modal__label" for="lastName">Отчество</label>
         </div>
       </fieldset>
       <div class="modal__wrap hide"></div>
       <button type="button" class="modal__btn--full">
-        <span class="modal__plus"></span>Добавить контакт
+        <span class="modal__plus"></span>
+        Добавить контакт
       </button>
+
+      <div class="modal__errors"></div>
+
       <div class="modal__btn-block">
-        <button class="modal__btn--lilac">Сохранить</button>
-        <button class="modal__btn--underlined"></button>
+        <button class="modal__btn--lilac">
+          <img class="btn-preloader hide" src="images/loader-save.svg" alt="">
+          <span class="lil">Сохранить</span>
+        </button>
+      <button class="modal__btn--underlined"></button>
       </div>
     </form>
   </div>

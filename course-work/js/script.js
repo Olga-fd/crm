@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const modalOverlay = document.querySelector('.modal_overlay');
   const legend = document.querySelector('.modal__legend');
   const spanId = document.querySelector('.modal__span');
+  const btnMainInModal = document.querySelector('.modal__btn--lilac');
   const btnUnderlined = document.querySelector('.modal__btn--underlined');
   const labels = document.querySelectorAll('th');
-  let response, data, i, inputContact, selectedDataset, rowOfTable;
+  let response, data, i, selectedDataset, rowOfTable;
   let surname = document.getElementById('surname');
   let name = document.getElementById('name');
   let lastName = document.getElementById('lastName');
@@ -29,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove('loaded_hiding');
     }, 500);
   };
+
+  // window.onerror = function() {
+  //   alert("Ошибка во время загрузки данных");
+  // };
 
 // СОРТИРОВКА-------------------------------------------------------------------------
   let deleteRows = function() {
@@ -215,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
   handle();
 
   function addContacts() {
-    inputContact = document.querySelectorAll('.input--border');
+    let inputContact = document.querySelectorAll('.input--border');
     selectedDataset = document.querySelectorAll('.select-selected');
     let arr = [];
     for (i = 0; i < inputContact.length; i++) {
@@ -290,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   async function changeDataOfClient(e) {
-    response = await fetch('http://localhost:3000/api/clients/');
+    response = await fetch('http://localhost:3000/api/clients');
     data = await response.json();    
     
     let index;
@@ -319,10 +324,9 @@ document.addEventListener('DOMContentLoaded', function() {
     for (i = 0; i < linkContacts.length; i++) {
       transformSelect(e);
       createBtnCancel();
-      document.querySelectorAll('.input--border')[i].value = linkContacts[i].getAttribute('data-tooltip');
+      document.querySelectorAll('.input--border')[i].value = linkContacts[i].getAttribute('aria-label');
       className = linkContacts[i].className;
       let necessary = options.find(option => className === option.value);
-      console.log(className);
       selectedItem.innerHTML = necessary.label;
       selectedItem.dataset.name = necessary.value;
     }; 
@@ -338,6 +342,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function createBtnCancel() {
     let btnDelOfInput = document.createElement('button');
     btnDelOfInput.setAttribute('type', 'button');
+    let tooltip = document.createElement('span');
+    tooltip.setAttribute('class', 'tooltip');
+    tooltip.textContent = 'Удалить контакт';
+    btnDelOfInput.append(tooltip);
     btnDelOfInput.classList.add('cancel');
     document.querySelectorAll('.modal__block-complex').forEach(block => block.append(btnDelOfInput));
   };
@@ -419,14 +427,31 @@ document.addEventListener('DOMContentLoaded', function() {
               contact.setAttribute('href', `https://facebook.com/${object.contacts[j].value}`);
               contact.setAttribute('target', '_blank');
             };            
-            // contact.setAttribute('aria-label', `${object.contacts[j].value}`);
-            contact.setAttribute('data-tooltip', `${object.contacts[j].value}`);
+            contact.setAttribute('aria-label', `${object.contacts[j].value}`);
+            let tooltip = document.createElement('span');
+            tooltip.setAttribute('class', 'tooltip');
+            // tooltip.setAttribute('data-tooltip', `${object.contacts[j].value}`);
+            tooltip.textContent = object.contacts[j].value;
+            contact.append(tooltip);
             contacts.append(contact);
           };
         };
       };
     })();
-    
+
+    let preloaderLil = document.createElement('div');
+    let preloaderRed = document.createElement('div');
+    let imgRed = document.createElement('img');
+    let imgLilac = document.createElement('img');
+    imgLilac.setAttribute('src', '../images/loader-change.svg');
+    imgRed.setAttribute('src', '../images/loader-del.svg');
+    imgLilac.setAttribute('class', 'btn-preloader');
+    imgRed.setAttribute('class', 'btn-preloader');
+    preloaderLil.append(imgLilac);
+    preloaderRed.append(imgRed);
+    btnChange.append(preloaderLil);
+    btnDelete.append(preloaderRed);
+
     table.append(tr);
     tr.append(id);
     tr.append(fullName);
@@ -442,16 +467,11 @@ document.addEventListener('DOMContentLoaded', function() {
     tr.append(btns);
 
     (function() {
-      let mi = document.querySelectorAll('[data-tooltip]');
-      for (let l = 0; l < mi.length; l++) {
-        let width = getComputedStyle(document.querySelectorAll('[data-tooltip]')[l],':before').width;
-        console.log(width);
-        let need = (parseInt(width) + 17) / 2 - 7;
-        console.log(need);
-        let computedStyle = document.querySelectorAll('[data-tooltip]')[l].dataset.tooltip;
-        
-        console.log(computedStyle);
-        computedStyle.style.width = `${need} + px`;
+      let tooltips = document.querySelectorAll('.tooltip');
+      for (let l = 0; l < tooltips.length; l++) {
+        let width = getComputedStyle(tooltips[l]).width;
+        let need = (parseInt(width) + 17) / 2 * -1;
+        tooltips[l].style.left = `${need}px`;
       }
     })();
     
@@ -461,8 +481,6 @@ document.addEventListener('DOMContentLoaded', function() {
       btnDelete,
     };
   };
-
-  
 
   async function deleteCustomerRecord(el) {
     response = await fetch(`http://localhost:3000/api/clients/${el.target.dataset.id}`, {
@@ -483,8 +501,10 @@ document.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (legend.innerHTML === 'Изменить данные') {
+      check();
       changeCustomerRecord();
     } else {
+      check();
       createCustomerRecord();
     }
     showListOfClients();
@@ -545,4 +565,136 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }, 300);
   });
+  
+  modal.onload = function () {
+    document.querySelector('.btn-preloader').classList.add('loaded_hiding');
+    modal.setTimeout(function () {
+      document.querySelector('.btn-preloader').classList.add('loaded');
+      document.querySelector('.btn-preloader').remove('loaded_hiding');
+    }, 500);
+  };
+
+//ВАЛИДАЦИЯ-------------------------------------------------------------------------------------
+// let error; 
+ let isError = false;
+// let input = document.querySelectorAll('.addition input');
+// let formGroup = document.querySelectorAll('.form-group');
+// const errorText	= [
+//   'Незаполненное поле ввода или поле содержит пробелы', // 0
+//   'Дата вне диапозона', // 1
+//   'Год вне диапозона', // 2
+// ];
+
+// function checkInput(objInp, objFormGroup) {
+//   error = document.createElement('p');
+//   isError = true;
+//   error.textContent = errorText[0];
+//   error.classList.add('error');
+//   objInp.classList.add('is-invalid');
+//   objFormGroup.append(error);
+// }
+
+// function validate() {
+//   let errors = form.querySelectorAll('.error')
+//   // for (let i = 0; i < errors.length; i++) {errors[i].remove();}
+//   errors.forEach(item => item.remove());
+  
+//   for (let i = 0; i < input.length; i++) {
+//     if (!input[i].value || input[i].value.includes('  ')) {
+//       checkInput(input[i], formGroup[i]);
+//     };
+//   };
+//   if ((startDate > new Date(input[4].value)) || (new Date(input[4].value) > endDate)) {
+//     checkInput(input[4], formGroup[4]);
+//     error.textContent = errorText[1];
+//   };
+//   if ((2000 > parseInt(input[5].value)) || (parseInt(input[5].value) > new Date().getFullYear())) {
+//     checkInput(input[5], formGroup[5]);
+//     error.textContent = errorText[2];
+//   };
+// };
+ 
+// function checkData() {
+//   validate();
+//   if (!isError) {
+//     addStudent(obj);
+//     cleanInput();
+//   };
+//   return false;
+// };
+
+// function cleanInput() {
+//   input.forEach(str => str.value = '');
+// } 
+
+// function cleanError(el) {
+//   let par = el.nextElementSibling;
+//   par.remove();
+//   el.classList.remove('is-invalid');
+//   isError = false;
+// }
+
+// form.addEventListener('focus', () => {
+//   let elem = document.activeElement;
+//   if (elem !== btn) cleanError(elem);
+// }, true);
+
+// close.addEventListener('click', () => {
+//   let inputOfFormAdd = form.querySelectorAll('.form-control');
+//   inputOfFormAdd.forEach(inp => cleanError(inp));
+// })
+//-=-=-=-=-=-=--=-
+  let blockForErrors = document.querySelector('.modal__errors');
+  let errors = [
+    `Незаполнено поле 'Фамилия'`,
+    `Незаполнено поле 'Имя'`,
+  ];
+  let field = [
+    surname,
+    name,
+  ]
+
+  function addElmnts() {
+    for (i = 0; i < field.length; i++) {
+      if (field[i].value === '  ' || !field[i].value) {
+        field[i].classList.add('error');
+        // btnMainInModal.setAttribute('disabled', 'disabled');
+        let errorText = document.createElement('p');
+        errorText.setAttribute('class', 'error-text');
+        errorText.textContent = errors[i];
+        blockForErrors.append(errorText);
+      };
+    };
+  };
+
+  function check() {
+    let inputContact = document.querySelectorAll('.input--border');
+    let countNull = 0;
+    addElmnts();
+    inputContact.forEach(contact => {
+      if (contact.value === '  ' || !contact.value) {
+        countNull++;
+        contact.classList.add('input-error');
+        // btnMainInModal.setAttribute('disabled', 'disabled');
+        let errorText = document.createElement('p');
+        errorText.setAttribute('class', 'error-text');
+        if (countNull === 1) {
+          errorText.textContent = `Незаполнено поле c контактом`;
+          blockForErrors.append(errorText);
+        };
+      };
+    });
+  };
+
+  function cleanError(el) {
+    el.classList.remove('error');
+    document.querySelector('.modal__errors').querySelector('p').remove();
+    isError = false;
+  }
+
+  form.addEventListener('focus', () => {
+    let elem = document.activeElement;
+    if (elem !== btn) cleanError(elem);
+  }, true);
+
 });

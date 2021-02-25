@@ -18,7 +18,7 @@ function createSelect() {
   select.classList.add('modal__select', 'visually-hidden');
   input.classList.add('input--border');
   input.setAttribute('type', 'text'); 
-  if (window.matchMedia("(min-width: 320px) and (max-width: 767px)").matches) {
+  if (window.matchMedia("(min-width: 320px) and (max-width: 594px)").matches) {
     input.setAttribute('placeholder', 'Введите данные');
   } else {
     input.setAttribute('placeholder', 'Введите данные контакта');
