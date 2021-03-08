@@ -49,6 +49,7 @@
   font-weight: 400;
   transition: .25s ease-in-out;
   opacity: 0;
+  white-space: nowrap;
 }
 
 .tooltip::after {

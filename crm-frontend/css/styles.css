@@ -141,13 +141,17 @@ h1 {
   animation: spin 2s linear infinite;
 } 
 
-/* .btn-preloader {
-  position: absolute;
+.btn-preloader {
+  /* position: absolute;
   top: 20%;
   left: 0;
-  z-index: 600;
+  z-index: 600; */
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: url('../images/loader-change.svg') no-repeat;
   animation: spin 2s linear infinite;
-} */
+}
 
 @keyframes spin {
   0% {transform: rotate(0deg);}
@@ -161,8 +165,8 @@ h1 {
 }
 
 .loaded .main__block--white,
-.loaded .main__preloader,
-.loaded .btn-preloader {
+.loaded .main__preloader
+/* ,.loaded .btn-preloader*/ { 
   display: none;
 }
 
@@ -228,18 +232,18 @@ table {
 .main-wrap {
   width: 100%;
   min-width: 320px;
-  overflow-x: scroll;
 }
 
 /* chrome, safari */
 .modal::-webkit-scrollbar,
-.main__wrap::-webkit-scrollbar { 
+
+.main__wrap::-webkit-scrollbar {  
   width: 0; 
 }
 
 /* ie 10+ */
 .modal,
-.main__wrap { 
+.main__wrap {  
   -ms-overflow-style: none;
   scrollbar-width: 0;
 }
@@ -263,7 +267,6 @@ td:nth-child(3),
 th:nth-child(4),
 td:nth-child(4) {
   width: 14.84%;
- 
 }
 
 th:nth-child(3),
@@ -307,12 +310,6 @@ th {
 }
 
 .arrow-up {
-  /* display: inline-block;
-  width: 8px;
-  height: 8px;
-  background-position: center;
-  vertical-align: middle;
-  background: url('../images/arrow-down.svg') no-repeat; */
   transform: scale(-1, -1);
 }
 
@@ -342,14 +339,17 @@ td button {
   border: none;
 } 
 
-td button:first-child {
-  padding-left: 20px;
+/* 
+td button:first-child  */
+.write {
+  padding-left: 14px;
   background: url('../images/pencil.svg') no-repeat;
   background-position: left center;
 }
 
-td button:last-child:not(.cover) {
-  padding-left: 20px;
+/* td button:last-child:not(.cover)  */
+.del {
+  padding-left: 14px;
   background: url('../images/delete.svg') no-repeat;
   background-position: left center;
 }
@@ -421,11 +421,11 @@ time {
   position: relative;
   top: -8px;
   display: inline;
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   padding: 0;
   border: 1px solid var(--lilac-color);
-  border-radius: 8px;
+  border-radius: 50%;
   background-color: transparent;
   cursor: pointer;
 }
@@ -445,7 +445,6 @@ time {
 .change:hover {
   color: var(--lilac-color);
 }
-
 
 .delete:hover {
   color: var(--red-color);
@@ -543,20 +542,16 @@ fieldset {
 }
 
 .modal__input:focus + .modal__label,
-.valid:valid + .modal__label
-/* .modal__input:valid + .modal__label*/ {   
+.valid:valid + .modal__label {   
   font-size: 10px;
   font-weight: 400;
-  top: -4px;
+  top: -9px;
 }
 
 .modal__wrap {
   width: 100%;
-  /* max-height: 185px; */
   padding-top: 12px;
-  /* padding-bottom: 5px; */
   background-color: #f4f3f6;
-  /* overflow-y: scroll; */
 }
 
 .modal__block {
@@ -618,6 +613,18 @@ fieldset {
   border: none;
 }
 
+.modal__btn--lilac:hover {
+  background-color: #b89eff;
+}
+
+.modal__btn--lilac:active {
+  background-color: #8052ff;
+}
+
+.modal__btn--lilac:disabled {
+  background-color: #c8c5d1;
+}
+
 .modal__btn--lilac .btn-preloader {
   display: inline-block;
 }
@@ -627,7 +634,6 @@ fieldset {
 }
 
 .modal__btn-block {
-  /* position: relative; */
   align-items: center;
   margin-top: 32px;
 }
@@ -662,14 +668,11 @@ fieldset {
   background-color: #e7e5eb;
   background-position: center center;
   border: 1px solid #c8c5d1;
-  /* border-top: none;
-  border-right: none;
-  border-bottom: none; */
   z-index: 602;
 }
 
 .cancel:hover {
-  border-color:  rgba(240, 106, 77, .5);
+  border-color: rgba(240, 106, 77, .5);
   background: url('../images/cancel-red.svg') no-repeat;
   background-color: #e7e5eb;
   background-position: center center;
@@ -753,7 +756,11 @@ legend p {
 }
 
 .input-error {
-  border-color: rgba(240, 106, 77, .5);
+ border-color: rgba(240, 106, 77, .5);  
+}
+
+.input-error::placeholder {
+  color: #f06a4d;
 }
 
 .modal__errors {
@@ -762,12 +769,12 @@ legend p {
 }
 
 .error-text {
-  margin: 0;
   color: #f06a4d;
   font-size: 10px;
   font-weight: 400;
   line-height: 14px;
   text-align: center;
+  white-space: nowrap;
 }
 
 @media (min-width: 320px) and (max-width: 594px) {
@@ -806,5 +813,16 @@ legend p {
   .input--border {
     width: 141px;
   }
+
+  .main-wrap {
+    overflow-x: scroll;
+  }
 }
+
+@media (min-width: 594px) and (max-width: 767px) {
+  .input--border {
+    width: 268px;
+  }
+}
+
 

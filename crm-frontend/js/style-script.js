@@ -1,4 +1,4 @@
-let block,j, selElmnt, selectedItem, optionList, optionItem, option, select, input, container;
+let block, selElmnt, selectedItem, optionList, optionItem, option, select, input, container;
 const addBtns = document.querySelectorAll('.modal__btn--full');
 let wrap = document.querySelector('.modal__wrap');
 let count = 0;
@@ -47,7 +47,10 @@ function transformSelect(e) {
   e.preventDefault();
   if (wrap.classList.contains('hide')) {
     wrap.classList.remove('hide');
+    document.querySelector('.modal__btn--full').style.paddingTop = '17px';
+    document.querySelector('.modal__btn--full').style.paddingBottom = '17px';
   };
+
   createSelect();
   block = document.querySelectorAll('.modal__block-complex');
   // if (block.length === 3) {
@@ -57,7 +60,7 @@ function transformSelect(e) {
   if (block.length > 9) {
     addBtns[0].setAttribute('disabled', 'disabled');
   };
-  for (i = count++; i < block.length; i++) {
+  for (let i = count++; i < block.length; i++) {
     selElmnt = block[i].getElementsByTagName('select')[0];
     selectedItem = document.createElement('div');
     selectedItem.setAttribute('class', 'select-selected');
@@ -68,7 +71,7 @@ function transformSelect(e) {
     optionList = document.createElement('div');
     optionList.setAttribute('class', 'select-items select-hide');
   
-    for (j = 0; j < selElmnt.length; j++) {
+    for (let j = 0; j < selElmnt.length; j++) {
       optionItem = document.createElement('div');
       optionItem.innerHTML = selElmnt.options[j].label;
       optionItem.setAttribute('data-name', selElmnt.options[j].value);
@@ -79,7 +82,7 @@ function transformSelect(e) {
         selectGroup = this.parentNode.parentNode.getElementsByTagName('select')[0];
         selectedDiv = this.parentNode.previousSibling;
         //console.log(selectedDiv);
-        for (i = 0; i < selectGroup.length; i++) {
+        for (let i = 0; i < selectGroup.length; i++) {
           if (selectGroup.options[i].label == this.innerHTML) {
             selectGroup.selectedIndex = i;
             selectedDiv.innerHTML = this.innerHTML;
@@ -101,13 +104,13 @@ function transformSelect(e) {
     this.classList.toggle('select-arrow-active');
     if (!this.nextSibling.classList.contains('select-hide')) {
     let array = []
-      for (i = 0; i < this.nextSibling.children.length; i++) {
+      for (let i = 0; i < this.nextSibling.children.length; i++) {
         array[i] = this.nextSibling.children[i];
       } 
       console.log(array);
       //let arr = Array.prototype.slice.call(this.nextSibling.children);
       let selItem = this.innerHTML;
-      for (i = 0; i < array.length; i++) {
+      for (let i = 0; i < array.length; i++) {
         if (array[i].innerHTML === selItem) {
           array[i].setAttribute('class', 'select-hide');
         } else {
@@ -122,14 +125,14 @@ function closeAllSelect(elmnt) {
   let items, selected, i, arr = [];
   items = document.getElementsByClassName('select-items');
   selected = document.getElementsByClassName('select-selected');
-  for (i = 0; i < selected.length; i++) {
+  for (let i = 0; i < selected.length; i++) {
     if (elmnt === selected[i]) {
       arr.push(i);
     } else {
       selected[i].classList.remove('select-arrow-active');
     }
   }
-  for (i = 0; i < items.length; i++) {
+  for (let i = 0; i < items.length; i++) {
     if (arr.indexOf(i)) {
       items[i].classList.add('select-hide');
     }

@@ -5,21 +5,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const close = document.querySelectorAll('.close');
   const modal = document.querySelector('.modal');
   const form = document.querySelector('.modal__form-new');
-  const modalDel = document.querySelector('.modal-del');
   const modalOverlay = document.querySelector('.modal_overlay');
   const legend = document.querySelector('.modal__legend');
   const spanId = document.querySelector('.modal__span');
   const btnUnderlined = document.querySelector('.modal__btn--underlined');
-  const labels = document.querySelectorAll('th');
-  let response, data, i, selectedDataset, rowOfTable;
+  
+  let response, data, rowOfTable;
   let surname = document.getElementById('surname');
   let name = document.getElementById('name');
   let lastName = document.getElementById('lastName');
   let fields = [
     'id',
     'surname',
-    'createdAt',
-    'updatedAt',
+    // 'createdAt',
+    // 'updatedAt',
   ];
 
   window.onload = function () {
@@ -64,12 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  async function sortArray(field) {
-    response = await fetch('http://localhost:3000/api/clients');
-    data = await response.json();
-    let dataSorted = data.sort(inAscendingOrder(field));
-  };
-
   function changeActiveCell(target) {
     let selectedCell = document.querySelector('.selected');
     if (target.querySelector('span:first-child').innerHTML !== selectedCell.innerHTML) {
@@ -85,21 +78,26 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 
-  async function handle() {
+  async function setHandlers() {
+    const labels = document.querySelectorAll('th');
     response = await fetch('http://localhost:3000/api/clients');
     data = await response.json();
-    let dataSorted;
-    let target;
+    let dataSorted, target;
+    let firstCell = document.querySelector('th:first-child span:nth-child(2)');
+    let secondCell = document.querySelector('th:nth-child(2) span:nth-child(2)');
+    let thirdCell = document.querySelector('th:nth-child(3) span:last-child');
+    let fourthCell = document.querySelector('th:nth-child(4) span:last-child');
+    
     labels[0].addEventListener('click', (e) => {
       target = e.currentTarget;
       changeActiveCell(target);
       deleteRows();
-      if (document.querySelector('th:first-child span:nth-child(2)').classList.contains('arrow-up')) {
+      if (firstCell.classList.contains('arrow-up')) {
         dataSorted = data.sort(inDescendingOrder(fields[0]));
-        document.querySelector('th:first-child span:nth-child(2)').classList.remove('arrow-up');
+        firstCell.classList.remove('arrow-up');
       } else {
         dataSorted = data.sort(inAscendingOrder(fields[0]));
-        document.querySelector('th:first-child span:nth-child(2)').classList.add('arrow-up');
+        firstCell.classList.add('arrow-up');
       };
       formTable(dataSorted);
     });
@@ -108,13 +106,13 @@ document.addEventListener('DOMContentLoaded', function() {
       target = e.currentTarget;
       changeActiveCell(target);
       deleteRows();
-      if (!document.querySelector('th:nth-child(2) span:nth-child(2)').classList.contains('arrow-up')) {
+      if (!secondCell.classList.contains('arrow-up')) {
         dataSorted = data.sort(inDescendingOrder(fields[1]));
-        document.querySelector('th:nth-child(2) span:nth-child(2)').classList.add('arrow-up');
+        secondCell.classList.add('arrow-up');
         document.querySelector('.alphabet').textContent = 'Я-А';
       } else {
         dataSorted = data.sort(inAscendingOrder(fields[1]));
-        document.querySelector('th:nth-child(2) span:nth-child(2)').classList.remove('arrow-up');
+        secondCell.classList.remove('arrow-up');
         document.querySelector('.alphabet').textContent = 'А-Я';
       };
       formTable(dataSorted);
@@ -124,108 +122,71 @@ document.addEventListener('DOMContentLoaded', function() {
       target = e.currentTarget;
       changeActiveCell(target);
       deleteRows();
-      if (document.querySelector('th:nth-child(3) span:last-child').classList.contains('arrow-up')) {
-        data.sort((a, b) => {
-          if ((new Date(a.createdAt).getMonth()) > (new Date(b.createdAt).getMonth())) {
-            return 1;
-          }
-          if ((new Date(a.createdAt).getMonth()) < (new Date(b.createdAt).getMonth())) {
-            return -1;
-          }
-          return 0;
-          });
-          dataSorted = data.sort((a, b) => {
-            if ((new Date(a.createdAt).getFullYear()) > (new Date(b.createdAt).getFullYear())) {
-              return 1;
-            }
-            if ((new Date(a.createdAt).getFullYear()) < (new Date(b.createdAt).getFullYear())) {
-              return -1;
-            }
-            return 0;
-          });
-          document.querySelector('th:nth-child(3) span:last-child').classList.remove('arrow-up');
-        } else {
-            data.sort((a, b) => {
-              if ((new Date(a.createdAt).getMonth()) < (new Date(b.createdAt).getMonth())) {
-                return 1;
-              }
-              if ((new Date(a.createdAt).getMonth()) > (new Date(b.createdAt).getMonth())) {
-                return -1;
-              }
-              return 0;
-            });
-            dataSorted = data.sort((a, b) => {
-              if ((new Date(a.createdAt).getFullYear()) < (new Date(b.createdAt).getFullYear())) {
-                return 1;
-              }
-              if ((new Date(a.createdAt).getFullYear()) > (new Date(b.createdAt).getFullYear())) {
-                return -1;
-              }
-              return 0;
-            });
-            document.querySelector('th:nth-child(3) span:last-child').classList.add('arrow-up');
-          };
-      formTable(dataSorted);
-    });
-
-    labels[3].addEventListener('click', (e) => {
-      target = e.currentTarget;
-      changeActiveCell(target);
-      deleteRows();
-      if (document.querySelector('th:nth-child(4) span:last-child').classList.contains('arrow-up')) {
-        data.sort((a, b) => {
-          if ((new Date(a.updatedAt).getMonth()) > (new Date(b.updatedAt).getMonth())) {
-            return 1;
-          }
-          if ((new Date(a.updatedAt).getMonth()) < (new Date(b.updatedAt).getMonth())) {
-            return -1;
-          }
-          return 0;
-          });
+      if (thirdCell.classList.contains('arrow-up')) {
         dataSorted = data.sort((a, b) => {
-          if ((new Date(a.updatedAt).getFullYear()) > (new Date(b.updatedAt).getFullYear())) {
+          if ((new Date(a.createdAt).getTime()) > (new Date(b.createdAt).getTime())) {
             return 1;
           }
-          if ((new Date(a.updatedAt).getFullYear()) < (new Date(b.updatedAt).getFullYear())) {
+          if ((new Date(a.createdAt).getTime()) < (new Date(b.createdAt).getTime())) {
             return -1;
           }
           return 0;
         });
-        document.querySelector('th:nth-child(4) span:last-child').classList.remove('arrow-up');
-        } else {
-          data.sort((a, b) => {
-            if ((new Date(a.updatedAt).getMonth()) < (new Date(b.updatedAt).getMonth())) {
-              return 1;
-            }
-            if ((new Date(a.updatedAt).getMonth()) > (new Date(b.updatedAt).getMonth())) {
-              return -1;
-            }
-            return 0;
+        thirdCell.classList.remove('arrow-up');
+      } else {
+        dataSorted = data.sort((a, b) => {
+          if ((new Date(a.createdAt).getTime()) < (new Date(b.createdAt).getTime())) {
+            return 1;
+          }
+          if ((new Date(a.createdAt).getTime()) > (new Date(b.createdAt).getTime())) {
+            return -1;
+          }
+          return 0;
           });
-          dataSorted = data.sort((a, b) => {
-            if ((new Date(a.updatedAt).getFullYear()) < (new Date(b.updatedAt).getFullYear())) {
-              return 1;
-            }
-            if ((new Date(a.updatedAt).getFullYear()) > (new Date(b.updatedAt).getFullYear())) {
-              return -1;
-            }
-            return 0;
-          });
-          document.querySelector('th:nth-child(4) span:last-child').classList.add('arrow-up');
-          };
+        thirdCell.classList.add('arrow-up');
+      };
+      formTable(dataSorted);
+    });
+      
+    labels[3].addEventListener('click', (e) => {
+      target = e.currentTarget;
+      changeActiveCell(target);
+      deleteRows();
+      if (fourthCell.classList.contains('arrow-up')) {
+        dataSorted = data.sort((a, b) => {
+          if ((new Date(a.updatedAt).getTime()) > (new Date(b.updatedAt).getTime())) {
+            return 1;
+          }
+          if ((new Date(a.updatedAt).getTime()) < (new Date(b.updatedAt).getTime())) {
+            return -1;
+          }
+          return 0;
+        });
+        fourthCell.classList.remove('arrow-up');
+      } else {
+        dataSorted = data.sort((a, b) => {
+          if ((new Date(a.updatedAt).getTime()) < (new Date(b.updatedAt).getTime())) {
+            return 1;
+          }
+          if ((new Date(a.updatedAt).getTime()) > (new Date(b.updatedAt).getTime())) {
+            return -1;
+          }
+          return 0;
+        });
+        fourthCell.classList.add('arrow-up');
+      };
       formTable(dataSorted);
     })
   };
-  handle();
+  setHandlers();
 
   function addContacts() {
     let inputContact = document.querySelectorAll('.input--border');
-    selectedDataset = document.querySelectorAll('.select-selected');
+    let selectedDataset = document.querySelectorAll('.select-selected');
     let arr = [];
-    for (i = 0; i < inputContact.length; i++) {
+    for (let i = 0; i < inputContact.length; i++) {
       let obj = {};
       obj.type = selectedDataset[i].dataset.name;
-      console.log(obj.type);
       obj.value = inputContact[i].value;
       arr.push(obj);
     };
@@ -233,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
  
   async function createCustomerRecord() {
-      response = await fetch('http://localhost:3000/api/clients', {
+    response = await fetch('http://localhost:3000/api/clients', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -269,11 +230,19 @@ document.addEventListener('DOMContentLoaded', function() {
   showListOfClients();
 
   function formTable(newArr = []) {
-    for (i = 0; i < newArr.length; i++) {
+    for (let i = 0; i < newArr.length; i++) {
       rowOfTable = addClientToTable(newArr[i]);
       
       // добавляем обработчик на кнопки
       rowOfTable.btnChange.addEventListener('click', (el) => {
+        document.querySelector('.pictogram').classList.remove('write');
+        document.querySelector('.pictogram').classList.add('btn-preloader');
+        // подвешиваем паузу на 5 секунд
+        setTimeout(function() {
+        // скрываем процесс загрузки
+          document.querySelector('.pictogram').classList.add('write');
+         document.querySelector('.pictogram').classList.remove('btn-preloader');
+        }, 500)
         legend.textContent = 'Изменить данные';
         btnUnderlined.textContent = 'Удалить клиента';
         btnUnderlined.setAttribute('data-id', el.target.dataset.id);
@@ -284,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       rowOfTable.btnDelete.addEventListener('click', (el) => {
+        const modalDel = document.querySelector('.modal-del');
         modalDel.classList.remove('hide');
         modalOverlay.classList.remove('hide');
         document.querySelector('.modal-del .modal__btn--lilac').addEventListener('click', (e) => {
@@ -299,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
     data = await response.json();    
     
     let index;
-    for (i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       if (data[i].id === e.target.dataset.id) {
         index = data.findIndex(item => item.id === e.target.dataset.id); 
         spanId.setAttribute('data-id', data[i].id);
@@ -316,12 +286,12 @@ document.addEventListener('DOMContentLoaded', function() {
       data[index].lastName,
     ];
     
-    for (i = 0; i < fullNameInputs.length; i++) {
+    for (let i = 0; i < fullNameInputs.length; i++) {
       fullNameInputs[i].value = props[i];
       fullNameInputs[i].classList.add('valid');
     };
   
-    for (i = 0; i < linkContacts.length; i++) {
+    for (let i = 0; i < linkContacts.length; i++) {
       transformSelect(e);
       createBtnCancel();
       document.querySelectorAll('.input--border')[i].value = linkContacts[i].getAttribute('aria-label');
@@ -388,10 +358,22 @@ document.addEventListener('DOMContentLoaded', function() {
     dateOfUpdate.textContent = `${dayUpdateFormated}.${monthUpdateFormated}.${year}`;
     timeOfCreation.textContent = `${hoursFrmd}:${minutesFormated}`;
     timeOfUpdate.textContent = `${hourOfUpdateFrmd}:${minutesFormatedOfUpdate}`;
-    btnChange.textContent = 'Изменить';
-    btnDelete.textContent = 'Удалить';
     timeOfCreation.setAttribute('class', 'clock');
     timeOfUpdate.setAttribute('class', 'clock');
+    let preloaderLil = document.createElement('span');
+    let preloaderRed = document.createElement('span');
+    // let imgRed = document.createElement('img');
+    // let imgLilac = document.createElement('img');
+    // preloaderLil.setAttribute('src', '../images/loader-change.svg');
+    // imgRed.setAttribute('src', '../images/loader-del.svg');
+    preloaderLil.setAttribute('class', 'write pictogram');
+    preloaderRed.setAttribute('class', 'del red');
+    // preloaderLil.append(imgLilac);
+    // preloaderRed.append(imgRed);
+    // btnChange.append(preloaderLil);
+    // btnDelete.append(preloaderRed);
+    btnChange.textContent = 'Изменить';
+    btnDelete.textContent = 'Удалить';
     btnChange.setAttribute('class', 'change');
     btnChange.setAttribute('data-id', object.id);
     btnDelete.setAttribute('data-id', object.id);
@@ -447,7 +429,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       };
       if (object.contacts.length > 5) {
-        console.log(contacts.childNodes.length);
         for (let k = 4; k < contacts.childNodes.length; k++) {
           contacts.childNodes[k].style.display = 'none';
         }
@@ -473,19 +454,6 @@ document.addEventListener('DOMContentLoaded', function() {
       };      
     })();
 
-    // let preloaderLil = document.createElement('div');
-    // let preloaderRed = document.createElement('div');
-    // let imgRed = document.createElement('img');
-    // let imgLilac = document.createElement('img');
-    // imgLilac.setAttribute('src', '../images/loader-change.svg');
-    // imgRed.setAttribute('src', '../images/loader-del.svg');
-    // imgLilac.setAttribute('class', 'btn-preloader');
-    // imgRed.setAttribute('class', 'btn-preloader');
-    // preloaderLil.append(imgLilac);
-    // preloaderRed.append(imgRed);
-    // btnChange.append(preloaderLil);
-    // btnDelete.append(preloaderRed);
-
     table.append(tr);
     tr.append(id);
     tr.append(fullName);
@@ -496,7 +464,9 @@ document.addEventListener('DOMContentLoaded', function() {
     tr.append(blockOfCreation);
     tr.append(blockOfUpdate);
     tr.append(contacts);
+    btns.append(preloaderLil);
     btns.append(btnChange);
+    btns.append(preloaderRed);
     btns.append(btnDelete);
     tr.append(btns);
 
@@ -566,7 +536,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   });
   
- 
   //Поиск-------------------------------------------------------------------
   let timerId;
   let searchInput = document.querySelector('.header__input');
@@ -599,11 +568,15 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }, 300);
   });
-  
-//ВАЛИДАЦИЯ-------------------------------------------------------------------------------------
-// let error; 
- let isError = false;
 
+  document.querySelector('.modal_overlay').addEventListener('mouseover', () => {
+    disableScroll();
+  });
+  document.querySelector('.modal_overlay').addEventListener('mouseout', () => {
+    enableScroll();
+  });
+
+//ВАЛИДАЦИЯ-------------------------------------------------------------------------------------
   let blockForErrors = document.querySelector('.modal__errors');
   let errors = [
     `Незаполнено поле 'Фамилия'`,
@@ -615,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
   ]
 
   function addElmnts() {
-    for (i = 0; i < field.length; i++) {
+    for (let i = 0; i < field.length; i++) {
       if (field[i].value === '  ' || !field[i].value) {
         field[i].classList.add('error');
         let errorText = document.createElement('p');
@@ -637,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let errorText = document.createElement('p');
         errorText.setAttribute('class', 'error-text');
         if (countNull === 1) {
-          errorText.textContent = `Незаполнено поле c контактом`;
+          errorText.textContent = 'Незаполнено поле c контактом';
           blockForErrors.append(errorText);
         };
       };
@@ -645,34 +618,68 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   function cleanError(el) {
-    el.classList.remove('error');
-    document.querySelector('.modal__errors').querySelector('p').remove();
-    isError = false;
-  }
+    let errorText = document.querySelectorAll('.error-text');
+    el.oninput = function() {
+      if (el.classList.contains('error')) {
+        el.classList.remove('error');
+        // checkInput(surname, errors[0]);
+        // checkInput(name, errors[1]);
+        if (el === surname) {
+          for (let i = 0; i < errorText.length; i++) {
+            if (errorText[i].innerHTML === errors[0]) {
+              errorText[i].remove();
+            };
+          };
+        };
 
-  // form.addEventListener('focus', () => {
-  //   let elem = document.activeElement;
-  //   if (elem !== btn) cleanError(elem);
-  // }, true);
+        if (el === name) {
+          for (let i = 0; i < errorText.length; i++) {
+            if (errorText[i].innerHTML === errors[1]) {
+              errorText[i].remove();
+            };
+          };
+        }; 
+      };    
+    if (el.classList.contains('input-error')) {
+      el.classList.remove('input-error');
+      if (!document.querySelector('.input-error')) {
+        for (let i = 0; i < errorText.length; i++) {
+          if (errorText[i].innerHTML === 'Незаполнено поле c контактом') {
+            errorText[i].remove();
+          };
+        };
+      }
+    };
+  
+  };
+  };
+
+  form.addEventListener('focus', () => {
+    let elem = document.activeElement;
+    if (elem !== document.querySelector('button')) cleanError(elem);
+  }, true);
 
   document.querySelectorAll('.modal__input').forEach(item => {
     item.addEventListener('blur', () => {
       if (!item.value) {
-        console.log(item.value);
         item.classList.remove('valid');
       } else {
         item.classList.add('valid');
       }
     })
   });
-
-  // let modalForChanging = document.querySelector('.changing');
-  // let preload =  document.querySelector('.btn-preloader');
-  // modalForChanging.onload = function () {
-  //   preload.classList.add('loaded_hiding');
-  //   modalForChanging.setTimeout(function () {
-  //     preload.classList.add('loaded');
-  //     preload.remove('loaded_hiding');
-  //   }, 500);
-  // };
+  
+  document.querySelectorAll('.change').forEach(elem => {
+    elem.addEventListener('click', function(e) {
+      // показываем процесс загрузки
+      document.querySelector('.pictogram').classList.remove('write');
+      document.querySelector('.pictogram').classList.add('btn-preloader');
+      // подвешиваем паузу на 5 секунд
+      setTimeout(function() {
+        // скрываем процесс загрузки
+        document.querySelector('.pictogram').classList.add('write');
+        document.querySelector('.pictogram').classList.remove('btn-preloader');
+      }, 50000)
+    });
+  })
 });
