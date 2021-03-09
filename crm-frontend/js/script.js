@@ -351,7 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let hourOfUpdateFrmd = (hourOfUpdate < 10 ? '0' : '') + hourOfUpdate;
     let minutesOfUpdate = new Date(object.updatedAt).getMinutes();
     let minutesFormatedOfUpdate = (minutesOfUpdate < 10 ? '0' : '') + minutesOfUpdate;
-    
+    let preloaderLil = document.createElement('span');
+    let preloaderRed = document.createElement('span');
+    let sub = document.createElement('div');
+
     id.textContent = object.id;
     fullName.textContent = `${object.surname} ${object.name} ${object.lastName}`;
     dateOfCreation.textContent = `${dayFormated}.${monthFormated}.${year}`;
@@ -360,8 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
     timeOfUpdate.textContent = `${hourOfUpdateFrmd}:${minutesFormatedOfUpdate}`;
     timeOfCreation.setAttribute('class', 'clock');
     timeOfUpdate.setAttribute('class', 'clock');
-    let preloaderLil = document.createElement('span');
-    let preloaderRed = document.createElement('span');
+    sub.setAttribute('class', 'sub');
     // let imgRed = document.createElement('img');
     // let imgLilac = document.createElement('img');
     // preloaderLil.setAttribute('src', '../images/loader-change.svg');
@@ -380,79 +382,8 @@ document.addEventListener('DOMContentLoaded', function() {
     btnDelete.setAttribute('class', 'delete');
     btns.setAttribute('class', 'group');
 
-    (function () {
-      let style = [
-        'phone',
-        'another',
-        'mail',
-        'vk',
-        'fb',
-      ];
-      let contact;
-      for (let j = 0; j < object.contacts.length; j++) {
-        for (let f = 0; f < style.length; f++) {
-          if (object.contacts[j].type === style[f]) {
-            contact = document.createElement('a');  
-            contact.classList.add(style[f]);
-            
-            if (object.contacts[j].type === 'phone') {
-              contact.setAttribute('href', `tel: ${object.contacts[j].value}`);
-            };
-            if (object.contacts[j].type === 'vk') {
-              contact.setAttribute('href', `https://vk.com/${object.contacts[j].value}`);
-              contact.setAttribute('target', '_blank');
-            };
-            if (object.contacts[j].type === 'mail') {
-              contact.setAttribute('href', `mailto: ${object.contacts[j].value}`);
-            };
-            if (object.contacts[j].type === 'fb') {
-              contact.setAttribute('href', `https://facebook.com/${object.contacts[j].value}`);
-              contact.setAttribute('target', '_blank');
-            };            
-            contact.setAttribute('aria-label', `${object.contacts[j].value}`);
-            let tooltip = document.createElement('span');
-            tooltip.setAttribute('class', 'tooltip');
-            // tooltip.setAttribute('data-tooltip', `${object.contacts[j].value}`);
-            
-            if(object.contacts[j].value.includes('@')) {
-              let link = document.createElement('a');
-              link.setAttribute('class', 'link');
-              link.textContent = object.contacts[j].value.split(' ')[1];
-              tooltip.textContent = `${object.contacts[j].value.split(' ')[0]} ${link}`;
-              tooltip.append(link);
-            } else {
-              tooltip.textContent = object.contacts[j].value;
-            }
-            contact.append(tooltip);
-            contacts.append(contact);
-          };
-        };
-      };
-      if (object.contacts.length > 5) {
-        for (let k = 4; k < contacts.childNodes.length; k++) {
-          contacts.childNodes[k].style.display = 'none';
-        }
-        let cover = document.createElement('button');
-        //cover.setAttribute('type', 'button');
-        cover.setAttribute('class', 'cover');
-        let number = contacts.childNodes.length - 4;
-        let elem = document.createElement('span');
-        elem.setAttribute('class', 'cover__elem');
-        elem.textContent = `+${number}`;
-        cover.append(elem);
-        contacts.append(cover);
-        cover.addEventListener('click', () => {
-          contacts.childNodes.forEach(child => child.removeAttribute('style'));
-          cover.classList.add('hide');
-          setTimeout(function () {
-            for (let k = 4; k < contacts.childNodes.length - 1; k++) {
-              contacts.childNodes[k].style.display = 'none';
-            }
-            cover.classList.remove('hide');
-          }, 60000);
-        });
-      };      
-    })();
+    createIconOfContact(object, contacts);
+    hideContacts(object, contacts);
 
     table.append(tr);
     tr.append(id);
@@ -466,23 +397,104 @@ document.addEventListener('DOMContentLoaded', function() {
     tr.append(contacts);
     btns.append(preloaderLil);
     btns.append(btnChange);
-    btns.append(preloaderRed);
-    btns.append(btnDelete);
+    sub.append(preloaderRed);
+    sub.append(btnDelete);
+    btns.append(sub);
     tr.append(btns);
 
-    (function() {
-      let tooltips = document.querySelectorAll('.tooltip');
-      for (let l = 0; l < tooltips.length; l++) {
-        let width = getComputedStyle(tooltips[l]).width;
-        let need = (parseInt(width) + 17) / 2 * -1;
-        tooltips[l].style.left = `${need}px`;
-      }
-    })();
+    setTooltip();
     
     return {
       tr,
       btnChange,
       btnDelete,
+    };
+  };
+
+  function createIconOfContact(object, contacts) {
+    let style = [
+      'phone',
+      'another',
+      'mail',
+      'vk',
+      'fb',
+    ];
+    let contact;
+    for (let j = 0; j < object.contacts.length; j++) {
+      for (let f = 0; f < style.length; f++) {
+        if (object.contacts[j].type === style[f]) {
+          contact = document.createElement('a');  
+          contact.classList.add(style[f]);
+          
+          if (object.contacts[j].type === 'phone') {
+            contact.setAttribute('href', `tel: ${object.contacts[j].value}`);
+          };
+          if (object.contacts[j].type === 'vk') {
+            contact.setAttribute('href', `https://vk.com/${object.contacts[j].value}`);
+            contact.setAttribute('target', '_blank');
+          };
+          if (object.contacts[j].type === 'mail') {
+            contact.setAttribute('href', `mailto: ${object.contacts[j].value}`);
+          };
+          if (object.contacts[j].type === 'fb') {
+            contact.setAttribute('href', `https://facebook.com/${object.contacts[j].value}`);
+            contact.setAttribute('target', '_blank');
+          };            
+          contact.setAttribute('aria-label', `${object.contacts[j].value}`);
+          let tooltip = document.createElement('span');
+          tooltip.setAttribute('class', 'tooltip');
+          // tooltip.setAttribute('data-tooltip', `${object.contacts[j].value}`);
+          
+          if(object.contacts[j].value.includes('@')) {
+            let link = document.createElement('a');
+            link.setAttribute('class', 'link');
+            link.textContent = object.contacts[j].value.split(' ')[1];
+            tooltip.textContent = `${object.contacts[j].value.split(' ')[0]} ${link}`;
+            tooltip.append(link);
+          } else {
+            tooltip.textContent = object.contacts[j].value;
+          }
+          contact.append(tooltip);
+          contacts.append(contact);
+        };
+      };
+    };
+  };
+
+  function hideContacts(object, contacts) {
+    if (object.contacts.length > 5) {
+      for (let k = 4; k < contacts.childNodes.length; k++) {
+        contacts.childNodes[k].style.display = 'none';
+      }
+      let cover = document.createElement('button');
+      //cover.setAttribute('type', 'button');
+      cover.setAttribute('class', 'cover');
+      let number = contacts.childNodes.length - 4;
+      let elem = document.createElement('span');
+      elem.setAttribute('class', 'cover__elem');
+      elem.textContent = `+${number}`;
+      cover.append(elem);
+      contacts.append(cover);
+      cover.addEventListener('click', () => {
+        contacts.childNodes.forEach(child => child.removeAttribute('style'));
+        setTooltip();
+        cover.classList.add('hide');
+        setTimeout(function () {
+          for (let k = 4; k < contacts.childNodes.length - 1; k++) {
+            contacts.childNodes[k].style.display = 'none';
+          }
+          cover.classList.remove('hide');
+        }, 60000);
+      });
+    };
+  };
+
+  function setTooltip() {
+    let tooltips = document.querySelectorAll('.tooltip');
+    for (let l = 0; l < tooltips.length; l++) {
+      let width = getComputedStyle(tooltips[l]).width;
+      let need = (parseInt(width) + 17) / 2 * -1;
+      tooltips[l].style.left = `${need}px`;
     };
   };
 
@@ -536,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   });
   
-  //Поиск-------------------------------------------------------------------
+//ПОИСК-------------------------------------------------------------------
   let timerId;
   let searchInput = document.querySelector('.header__input');
    
