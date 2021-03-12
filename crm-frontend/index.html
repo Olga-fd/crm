@@ -26,7 +26,7 @@
   <main class="main">
     <div class="main__fixed-container">
       <h1 class="main__headline">Клиенты</h1>
-      <div class="main-wrap">
+      <div class="main__wrap">
         <table class="main__table">
           <thead>
             <tr>
@@ -71,7 +71,7 @@
   </main>
 
   <div class="modal_overlay hide" tabindex="-1"></div>
-  <div class="modal modal-new hide" aria-hidden="true"> 
+  <div class="modal modal-new hide" aria-modal="true"> 
     <form class="modal__form-new">
       <button type="reset" class="close" aria-label="Закрыть"></button>
       <fieldset class="modal__fieldset">
@@ -110,12 +110,12 @@
     </form>
   </div>
 
-  <div class="modal modal-del hide" aria-hidden="true"> 
+  <div class="modal modal-del hide" aria-modal="true"> 
     <form class="modal__form-new form-delete">
       <button type="reset" class="close" aria-label="Закрыть"></button>
       <fieldset class="modal__fieldset">
         <legend class="modal__legend legend-del">Удалить клиента</legend>
-        <p>Вы&nbsp;действительно хотите удалить данного клиента?</p>
+        <p class="modal__paragraph">Вы&nbsp;действительно хотите удалить данного клиента?</p>
         <div class="modal__btn-block">
           <button class="modal__btn--lilac">Удалить</button>
           <button class="modal__btn--underlined">Отмена</button>

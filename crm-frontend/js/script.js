@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const legend = document.querySelector('.modal__legend');
   const spanId = document.querySelector('.modal__span');
   const btnUnderlined = document.querySelector('.modal__btn--underlined');
-  
   let response, data, rowOfTable;
   let surname = document.getElementById('surname');
   let name = document.getElementById('name');
@@ -500,7 +499,11 @@ document.addEventListener('DOMContentLoaded', function() {
       check();
       createCustomerRecord();
     }
-    showPreloader();
+    if (document.querySelector('.error-text')) {
+      hidePreloader();
+    } else {
+      showPreloader();
+    }
     await showListOfClients();
   });
 
@@ -557,6 +560,11 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       });
     }, 300);
+
+    if (!text) {
+      deleteRows();
+      showListOfClients();
+    }
   });
 
   document.querySelector('.modal_overlay').addEventListener('mouseover', () => {
@@ -664,8 +672,8 @@ document.addEventListener('DOMContentLoaded', function() {
     spinner.classList.remove('hide');
   }
 
-  function showPreloader() {
+  function hidePreloader() {
     let spinner = document.querySelector('.btn-preloader');
-    spinner.classList.remove('hide');
+    spinner.classList.add('hide');
   }
 });
