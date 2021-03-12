@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="true" name="HandheldFriendly">
+  <meta content="width" name="MobileOptimized">
+  <meta content="yes" name="apple-mobile-web-app-capable"> 
   <title>CRM</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/tooltip.css">
@@ -15,13 +18,13 @@
 </head>
 <body>
   <header class="header">
-    <div class="fixed-container header__fixed-container">
+    <div class="header__fixed-container">
       <img class="header__logo" src="images/logo.svg" alt="Логотип">
       <input type="text" class="header__input" placeholder="Введите запрос">
     </div>
   </header>
   <main class="main">
-    <div class="main__fixed-container fixed-container">
+    <div class="main__fixed-container">
       <h1 class="main__headline">Клиенты</h1>
       <div class="main-wrap">
         <table class="main__table">
@@ -55,7 +58,7 @@
         </div>   
       </div>
       <button class="main__btn" aria-label="Добавить">
-        <svg width="23" height="16" viewbox="0 0 23 16" fill="none" 
+        <svg width="23" height="16" viewBox="0 0 23 16" fill="none" 
           xmlns="http://www.w3.org/2000/svg">
           <path d="M14.5 8C16.71 8 18.5 6.21 18.5 4C18.5 1.79 16.71 0 14.5 0C12.29 0 
           10.5 1.79 10.5 4C10.5 6.21 12.29 8 14.5 
@@ -100,7 +103,7 @@
       <div class="modal__btn-block">
         <button class="modal__btn--lilac">
           <img class="btn-preloader hide" src="images/loader-save.svg" alt="">
-          <span class="lil">Сохранить</span>
+          <span class="name-btn">Сохранить</span>
         </button>
       <button class="modal__btn--underlined"></button>
       </div>

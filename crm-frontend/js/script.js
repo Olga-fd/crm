@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let fields = [
     'id',
     'surname',
-    // 'createdAt',
-    // 'updatedAt',
   ];
 
   window.onload = function () {
@@ -28,10 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove('loaded_hiding');
     }, 500);
   };
-
-  // window.onerror = function() {
-  //   alert("Ошибка во время загрузки данных");
-  // };
 
 // СОРТИРОВКА-------------------------------------------------------------------------
   let deleteRows = function() {
@@ -232,36 +226,44 @@ document.addEventListener('DOMContentLoaded', function() {
   function formTable(newArr = []) {
     for (let i = 0; i < newArr.length; i++) {
       rowOfTable = addClientToTable(newArr[i]);
-      
       // добавляем обработчик на кнопки
-      rowOfTable.btnChange.addEventListener('click', (el) => {
-        document.querySelector('.pictogram').classList.remove('write');
-        document.querySelector('.pictogram').classList.add('btn-preloader');
-        // подвешиваем паузу на 5 секунд
-        setTimeout(function() {
-        // скрываем процесс загрузки
-          document.querySelector('.pictogram').classList.add('write');
-         document.querySelector('.pictogram').classList.remove('btn-preloader');
-        }, 500)
+      rowOfTable.btnChange.addEventListener('click',  async (el) => {
+        el.target.previousSibling.classList.remove('write');
+        el.target.previousSibling.classList.add('lil-preloader');
+        el.target.style.color = 'var(--lilac-color)';
+        await changeDataOfClient(el);
         legend.textContent = 'Изменить данные';
         btnUnderlined.textContent = 'Удалить клиента';
         btnUnderlined.setAttribute('data-id', el.target.dataset.id);
-        modal.classList.add('changing');
+        //modal.classList.add('changing');
         modal.classList.remove('hide');
         modalOverlay.classList.remove('hide');
-        changeDataOfClient(el);
+        
+        el.target.previousSibling.classList.add('write');
+        el.target.previousSibling.classList.remove('lil-preloader');
+        el.target.style.color = '#333';
       });
 
-      rowOfTable.btnDelete.addEventListener('click', (el) => {
-        const modalDel = document.querySelector('.modal-del');
-        modalDel.classList.remove('hide');
-        modalOverlay.classList.remove('hide');
+      rowOfTable.btnDelete.addEventListener('click', (elm) => {
+        elm.target.previousSibling.classList.remove('del');
+        elm.target.previousSibling.classList.add('red-preloader');
+        elm.target.style.color = 'var(--red-color)';
+        showSpinner();
+        // elm.target.classList.add('del');
+        // elm.target.classList.remove('red-preloader');
+        // elm.target.style.color = '#333';
         document.querySelector('.modal-del .modal__btn--lilac').addEventListener('click', (e) => {
           e.preventDefault();
-          deleteCustomerRecord(el);
+          deleteCustomerRecord(elm);
         });
       });
     };
+  };
+
+  function showSpinner() {
+    const modalDel = document.querySelector('.modal-del');
+    modalDel.classList.remove('hide');
+    modalOverlay.classList.remove('hide');
   };
 
   async function changeDataOfClient(e) {
@@ -276,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
         spanId.textContent = 'ID:' + ' ' + data[i].id;
       };
     };
+    
     let className;
     let cell = e.target.parentNode.previousSibling;
     let linkContacts = cell.querySelectorAll('td > a');
@@ -330,50 +333,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let contacts = document.createElement('td');
     let blockOfCreation = document.createElement('td');
     let blockOfUpdate = document.createElement('td'); 
-    let day = new Date(object.createdAt).getDate();
-    let dayFormated = (day < 10 ? '0' : '') + day;
-    let month = new Date(object.createdAt).getMonth() + 1;
-    let monthFormated = (month < 10 ? '0' : '') + month;
-    let dayUpdate = new Date(object.updatedAt).getDate();
-    let dayUpdateFormated = (dayUpdate < 10 ? '0' : '') + dayUpdate;
-    let monthUpdate = new Date(object.updatedAt).getMonth() + 1;
-    let monthUpdateFormated = (monthUpdate < 10 ? '0' : '') + monthUpdate;
-    let year = new Date(object.createdAt).getFullYear();
     let dateOfCreation = document.createElement('time');
     let dateOfUpdate = document.createElement('time');
     let timeOfCreation = document.createElement('time');
     let timeOfUpdate = document.createElement('time');
-    let hours = new Date(object.createdAt).getHours();
-    let hoursFrmd = (hours < 10 ? '0' : '') + hours;
-    let minutes = new Date(object.createdAt).getMinutes();
-    let minutesFormated = (minutes < 10 ? '0' : '') + minutes;
-    let hourOfUpdate = new Date(object.updatedAt).getHours();
-    let hourOfUpdateFrmd = (hourOfUpdate < 10 ? '0' : '') + hourOfUpdate;
-    let minutesOfUpdate = new Date(object.updatedAt).getMinutes();
-    let minutesFormatedOfUpdate = (minutesOfUpdate < 10 ? '0' : '') + minutesOfUpdate;
-    let preloaderLil = document.createElement('span');
-    let preloaderRed = document.createElement('span');
+    let preElemLil = document.createElement('span');
+    let preElemRed = document.createElement('span');
     let sub = document.createElement('div');
 
     id.textContent = object.id;
     fullName.textContent = `${object.surname} ${object.name} ${object.lastName}`;
-    dateOfCreation.textContent = `${dayFormated}.${monthFormated}.${year}`;
-    dateOfUpdate.textContent = `${dayUpdateFormated}.${monthUpdateFormated}.${year}`;
-    timeOfCreation.textContent = `${hoursFrmd}:${minutesFormated}`;
-    timeOfUpdate.textContent = `${hourOfUpdateFrmd}:${minutesFormatedOfUpdate}`;
+    dateOfCreation.textContent = new Date(object.createdAt).toLocaleDateString();
+    dateOfUpdate.textContent = new Date(object.updatedAt).toLocaleDateString();
+    dateOfCreation.setAttribute('datetime', new Date(object.createdAt).toISOString());
+    dateOfUpdate.setAttribute('datetime', new Date(object.updatedAt).toISOString());
+    timeOfCreation.textContent = new Date(object.createdAt).toLocaleTimeString().slice(0,-3);
+    timeOfUpdate.textContent = new Date(object.updatedAt).toLocaleTimeString().slice(0,-3);
     timeOfCreation.setAttribute('class', 'clock');
     timeOfUpdate.setAttribute('class', 'clock');
     sub.setAttribute('class', 'sub');
-    // let imgRed = document.createElement('img');
-    // let imgLilac = document.createElement('img');
-    // preloaderLil.setAttribute('src', '../images/loader-change.svg');
-    // imgRed.setAttribute('src', '../images/loader-del.svg');
-    preloaderLil.setAttribute('class', 'write pictogram');
-    preloaderRed.setAttribute('class', 'del red');
-    // preloaderLil.append(imgLilac);
-    // preloaderRed.append(imgRed);
-    // btnChange.append(preloaderLil);
-    // btnDelete.append(preloaderRed);
+    preElemLil.setAttribute('class', 'write pictogram');
+    preElemRed.setAttribute('class', 'del cross');
     btnChange.textContent = 'Изменить';
     btnDelete.textContent = 'Удалить';
     btnChange.setAttribute('class', 'change');
@@ -395,15 +375,14 @@ document.addEventListener('DOMContentLoaded', function() {
     tr.append(blockOfCreation);
     tr.append(blockOfUpdate);
     tr.append(contacts);
-    btns.append(preloaderLil);
+    btns.append(preElemLil);
     btns.append(btnChange);
-    sub.append(preloaderRed);
+    sub.append(preElemRed);
     sub.append(btnDelete);
     btns.append(sub);
     tr.append(btns);
 
     setTooltip();
-    
     return {
       tr,
       btnChange,
@@ -427,29 +406,28 @@ document.addEventListener('DOMContentLoaded', function() {
           contact.classList.add(style[f]);
           
           if (object.contacts[j].type === 'phone') {
-            contact.setAttribute('href', `tel: ${object.contacts[j].value}`);
+            contact.setAttribute('href', `tel:${object.contacts[j].value}`);
           };
           if (object.contacts[j].type === 'vk') {
             contact.setAttribute('href', `https://vk.com/${object.contacts[j].value}`);
             contact.setAttribute('target', '_blank');
           };
           if (object.contacts[j].type === 'mail') {
-            contact.setAttribute('href', `mailto: ${object.contacts[j].value}`);
+            contact.setAttribute('href', `mailto:${object.contacts[j].value}`);
           };
           if (object.contacts[j].type === 'fb') {
             contact.setAttribute('href', `https://facebook.com/${object.contacts[j].value}`);
             contact.setAttribute('target', '_blank');
           };            
           contact.setAttribute('aria-label', `${object.contacts[j].value}`);
-          let tooltip = document.createElement('span');
+          let tooltip = document.createElement('p');
           tooltip.setAttribute('class', 'tooltip');
-          // tooltip.setAttribute('data-tooltip', `${object.contacts[j].value}`);
-          
-          if(object.contacts[j].value.includes('@')) {
-            let link = document.createElement('a');
+                
+          if (object.contacts[j].value.includes('@') && object.contacts[j].value.includes(' ')) {
+            let link = document.createElement('span');
             link.setAttribute('class', 'link');
             link.textContent = object.contacts[j].value.split(' ')[1];
-            tooltip.textContent = `${object.contacts[j].value.split(' ')[0]} ${link}`;
+            tooltip.textContent = object.contacts[j].value.split(' ')[0] + ' ';
             tooltip.append(link);
           } else {
             tooltip.textContent = object.contacts[j].value;
@@ -467,7 +445,6 @@ document.addEventListener('DOMContentLoaded', function() {
         contacts.childNodes[k].style.display = 'none';
       }
       let cover = document.createElement('button');
-      //cover.setAttribute('type', 'button');
       cover.setAttribute('class', 'cover');
       let number = contacts.childNodes.length - 4;
       let elem = document.createElement('span');
@@ -514,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // форма добавления клиента
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (legend.innerHTML === 'Изменить данные') {
       check();
@@ -523,7 +500,8 @@ document.addEventListener('DOMContentLoaded', function() {
       check();
       createCustomerRecord();
     }
-    showListOfClients();
+    showPreloader();
+    await showListOfClients();
   });
 
  // закрыть модальное окно
@@ -680,18 +658,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     })
   });
-  
-  document.querySelectorAll('.change').forEach(elem => {
-    elem.addEventListener('click', function(e) {
-      // показываем процесс загрузки
-      document.querySelector('.pictogram').classList.remove('write');
-      document.querySelector('.pictogram').classList.add('btn-preloader');
-      // подвешиваем паузу на 5 секунд
-      setTimeout(function() {
-        // скрываем процесс загрузки
-        document.querySelector('.pictogram').classList.add('write');
-        document.querySelector('.pictogram').classList.remove('btn-preloader');
-      }, 50000)
-    });
-  })
+
+  function showPreloader() {
+    let spinner = document.querySelector('.btn-preloader');
+    spinner.classList.remove('hide');
+  }
+
+  function showPreloader() {
+    let spinner = document.querySelector('.btn-preloader');
+    spinner.classList.remove('hide');
+  }
 });
