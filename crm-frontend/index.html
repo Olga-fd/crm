@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="true" name="HandheldFriendly">
+  <meta content="width" name="MobileOptimized">
+  <meta content="yes" name="apple-mobile-web-app-capable"> 
+  <title>CRM</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/tooltip.css">
+  <link rel="stylesheet" href="css/select-style.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="js/modernizr-custom.js"></script>
+  <script defer src="js/scroll.js"></script>
+  <script defer src="js/style-script.js"></script>
+  <script defer src="js/script.js"></script> 
+</head>
+<body>
+  <header class="header">
+    <div class="header__fixed-container">
+      <img class="header__logo" src="images/logo.svg" alt="Логотип">
+      <input type="text" class="header__input" placeholder="Введите запрос">
+    </div>
+  </header>
+  <main class="main">
+    <div class="main__fixed-container">
+      <h1 class="main__headline">Клиенты</h1>
+      <div class="main__wrap">
+        <table class="main__table">
+          <thead>
+            <tr>
+              <th>
+                <span class="selected">ID</span>
+                <span class="arrow-up arrow-down"></span>
+              </th>
+              <th>
+                <span>Фамилия Имя Отчество</span>
+                <span class="arrow-down hide"></span>
+                <span class="alphabet hide">А-Я</span>
+              </th>
+              <th>
+                <span>Дата и время создания</span>
+                <span class="arrow-down hide"></span>
+              </th>
+              <th>
+                <span>Последние изменения</span>
+                <span class="arrow-down hide"></span>
+              </th>
+              <th>Контакты</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="main__block--white">
+          <img class="main__preloader" src="images/download.svg" alt="Идет загрузка">
+        </div>   
+      </div>
+      <button class="main__btn" aria-label="Добавить">
+        <svg width="23" height="16" viewBox="0 0 23 16" fill="none" 
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.5 8C16.71 8 18.5 6.21 18.5 4C18.5 1.79 16.71 0 14.5 0C12.29 0 
+          10.5 1.79 10.5 4C10.5 6.21 12.29 8 14.5 
+          8ZM5.5 6V3H3.5V6H0.5V8H3.5V11H5.5V8H8.5V6H5.5ZM14.5 10C11.83 10 6.5 11.34 
+          6.5 14V16H22.5V14C22.5 11.34 17.17 10 14.5 10Z" fill="#9873FF"/>
+        </svg>
+        Добавить клиента
+      </button>
+    </div>
+  </main>
+
+  <div class="modal_overlay hide" tabindex="-1"></div>
+  <div class="modal modal-new hide" aria-modal="true"> 
+    <form class="modal__form-new">
+      <button type="reset" class="close" aria-label="Закрыть"></button>
+      <fieldset class="modal__fieldset">
+        
+        <legend class="modal__legend legend--new"></legend>
+        <span class="modal__span"></span>
+     
+        <div class="modal__block">
+          <input class="modal__input hide input-surname" type="text" id="surname">
+          <label class="modal__label" for="surname">Фамилия<sup>*</sup></label> 
+        </div>
+        <div class="modal__block">
+          <input class="modal__input hide input-name" type="text" id="name"> 
+          <label class="modal__label" for="name">Имя<sup>*</sup></label>
+        </div>  
+        <div class="modal__block">
+          <input class="modal__input hide input-middlename" type="text" id="lastName">
+          <label class="modal__label" for="lastName">Отчество</label>
+        </div>
+      </fieldset>
+      <div class="modal__wrap hide"></div>
+      <button type="button" class="modal__btn--full">
+        <span class="modal__plus"></span>
+        Добавить контакт
+      </button>
+
+      <div class="modal__errors"></div>
+
+      <div class="modal__btn-block">
+        <button class="modal__btn--lilac">
+          <img class="btn-preloader hide" src="images/loader-save.svg" alt="">
+          <span class="name-btn">Сохранить</span>
+        </button>
+      <button class="modal__btn--underlined"></button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal modal-del hide" aria-modal="true"> 
+    <form class="modal__form-new form-delete">
+      <button type="reset" class="close" aria-label="Закрыть"></button>
+      <fieldset class="modal__fieldset">
+        <legend class="modal__legend legend-del">Удалить клиента</legend>
+        <p class="modal__paragraph">Вы&nbsp;действительно хотите удалить данного клиента?</p>
+        <div class="modal__btn-block">
+          <button class="modal__btn--lilac">Удалить</button>
+          <button class="modal__btn--underlined">Отмена</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</body>
+</html>

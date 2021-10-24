@@ -1,0 +1,41 @@
+.tooltip {
+  position: absolute;
+  z-index: 1;
+  /* bottom: 150%; */
+  bottom: 28px;
+  margin: 0;
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  padding: 9px 17px;
+  font-size: 12px;
+  font-weight: 400;
+  transition: .25s ease-in-out;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 7px solid #333;
+  /* border-width: 4px; */
+  transition: .25s ease-in-out;
+}
+
+[aria-label]:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #B89EFF;
+  text-decoration: underline;
+}
